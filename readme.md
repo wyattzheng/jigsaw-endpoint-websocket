@@ -178,12 +178,15 @@ msg是信息的具体内容。
 ```
 let jg = new Jigsaw("myjigsaw","ws://127.0.0.1:1001/")
 
-jg.send("test:get",{abc:123}).then((data)=>{
-	console.log(data);
-});
+jg.on("ready",()=>{
+	jg.send("test:get",{abc:123}).then((data)=>{
+		console.log(data);
+	});
 
-jg.port("call",({data})=>{
-	console.log("your passed this:",data);
+	jg.port("call",({data})=>{
+		console.log("your passed this:",data);
+	});
+
 });
 
 ```

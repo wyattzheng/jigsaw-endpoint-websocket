@@ -26,19 +26,33 @@ window.Jigsaw=(()=>{
 				this._doHeartbeat();
 			},10000);
 
+
+			this.events={};
+			
 			this.ports={};
 		}
+		on(event,handler){
+			if(typeof(handler) != "function")
+				throw new Error("handler must be a function");
 
+			this.events[event]=handler;	
+		}
+		emit(event,data){
+			if(this.events[event])
+				this.events[event](data);	
+		}
 		_onWSOpen(){
 			this.state="open";
+			this.emit("ready");
 		}
 		_onWSClose(){
 			for(let r of Object.values(this.reqs))
 				r.reject("websocket connection closed");
 			
 			clearInterval(this._heartbeater);
-			this.state="close";
 
+			this.state="close";
+			this.emit("close");
 		}
 		async send(path,data){
 			if(this.state!="open")
