@@ -1,12 +1,10 @@
-const {jigsaw}=require("jigsaw.js")("127.0.0.1","127.0.0.1");
+const {jigsaw,domainserver} = require("jigsaw.js")("127.0.0.1","127.0.0.1");
+const WSEndpoint = require("../lib/lib");
+
+
 const sleep=(t)=>new Promise((r)=>setTimeout(r,t));
 
 let jg=new jigsaw();
-
-
-const domainserver = JigsawNet("127.0.0.1","127.0.0.1").domainserver;
-
-domainserver();
 
 let endpoint=new WSEndpoint({
 	entry:"127.0.0.1",
