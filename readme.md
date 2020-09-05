@@ -102,12 +102,12 @@ ws.send(JSON.stringify({type:"send",reqid:"",path:"myjigsaw:data",data:{
     
 #### 1.4.1 WSEndpoint.prototype.constructor({ entry , domserver , port})
     
-此为WSEndpoint的构造器，用于创建一个 WSEndpoint实例。
-
-entry 代表 ```jigsaw网络的入口网络地址``` ，与导入jigsaw.js时填入的第一个参数一致。
-domserver 代表 ```jigsaw网络的域名服务器地址```，与导入jigsaw.js时填入的第二个参数一致。
-port 代表 WebSocket服务器 要监听的端口，默认是 1001
-
+此为WSEndpoint的构造器，用于创建一个 WSEndpoint实例。   
+   
+entry 代表 ```jigsaw网络的入口网络地址``` ，与导入jigsaw.js时填入的第一个参数一致。   
+domserver 代表 ```jigsaw网络的域名服务器地址```，与导入jigsaw.js时填入的第二个参数一致。   
+port 代表 WebSocket服务器 要监听的端口，默认是 1001   
+   
 #### 1.4.2 基于WebSocket的Endpoint通信协议
 
 ##### 1.4.2.1 创建WebSocket客户端与WSEndpoint的连接
