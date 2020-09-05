@@ -138,7 +138,8 @@ jigsawname代表要创建的jigsaw实例名。
 ```
 {
 	type:"setport",//代表封包类型
-	portname:"test" //其他项都是封包的参数
+	reqid:"whatever", //本次请求的id,该项可以不传递。若传递了,系统在回复时会带上一样的reqid
+	portname:"test", //其他项都是封包的参数
 }
 ```
    
@@ -150,14 +151,14 @@ setport(portname): 监听一个接口名为portname的数据，之后只要有ji
 
 getallports() : 获取当前WebSocket客户端已经监听的所有jigsaw接口。
 
-send(path,data,reqid) : 向一个path路径对应的jigsaw接口发送数据，data为要发送的数据，reqid应该随机指定一个，这样接受到接口的回复之后可以准确取回。
+send(path,data) : 向一个path路径对应的jigsaw接口发送数据，data为要发送的数据。reqid应该随机指定一个，这样接受到接口的回复之后可以准确取回。
 ```
    
 回复封包： （Endpoint回复WebSocket客户端）   
    
 ```
-system(ok,err,data): 
-这是一个系统操作的回复，例如执行监听一个接口的操作之后收到的回复。
+response(ok,err,data): 
+这是一次操作的回复，例如执行监听一个接口的操作之后收到的回复。
 若ok为false，则一定会有一个错误发生，err会报告错误的原因。
 若ok为true，则data值会报告回复的具体信息。
 
