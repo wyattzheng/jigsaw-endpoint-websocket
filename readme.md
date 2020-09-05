@@ -161,4 +161,9 @@ system(ok,err,data):
 若ok为false，则一定会有一个错误发生，err会报告错误的原因。
 若ok为true，则data值会报告回复的具体信息。
 
+port(port,msg):
+若一个jigsaw接口收到了信息，则Endpoint会告知WebSocket这个信息。
+port代表接口的名字
+msg是信息的具体内容。
+
 ```
