@@ -1,15 +1,12 @@
-const {jigsaw,domainserver} = require("jigsaw.js")("127.0.0.1","127.0.0.1");
+const option = {entry:"127.0.0.1",domserver:"127.0.0.1"};
+const {jigsaw,domainserver} = require("jigsaw.js")(option.entry,option.domserver);
+const util = require("util");
+const sleep = util.promisify(setTimeout);
+
 const WSEndpoint = require("../lib/lib");
 
 
-const sleep=(t)=>new Promise((r)=>setTimeout(r,t));
-
-let jg=new jigsaw();
-
-let endpoint=new WSEndpoint({
-	entry:"127.0.0.1",
-	domserver:"127.0.0.1",
-});
+let endpoint=new WSEndpoint(option);
 
 endpoint.on("enter",(jgname)=>{
 	console.log(jgname,"enter")
@@ -17,23 +14,25 @@ endpoint.on("enter",(jgname)=>{
 endpoint.on("leave",(jgname)=>{
 	console.log(jgname,"leave")
 })
-
 endpoint.on("error",console.error);
 
-
-
-(async()=>{
+async function startSending(){
+	let jg=new jigsaw();
+	
 	while(true){
 		try{
-			await jg.send("abc:get",{
-				abc:123
+			await jg.send("hw:get",{
+				hello:"Hello World!"
 			});
 
 		}catch(err){
 
 		}
-		console.log("send");
-		await sleep(1000);
+		await sleep(2000);
 	}
+}
 
-})();
+domainserver();
+startSending();
+
+console.log("持续向 hw:get 发送欢迎信息中");

@@ -107,8 +107,22 @@ ws.send(JSON.stringify({type:"send",reqid:"",path:"myjigsaw:data",data:{
 entry 代表 ```jigsaw网络的入口网络地址``` ，与导入jigsaw.js时填入的第一个参数一致。   
 domserver 代表 ```jigsaw网络的域名服务器地址```，与导入jigsaw.js时填入的第二个参数一致。   
 port 代表 WebSocket服务器 要监听的端口，默认是 1001   
-   
-#### 1.4.2 基于WebSocket的Endpoint通信协议
+       
+所有WSEndpoint都继承了EventEmitter,于是你可以通过 ws.on("event",callback) 来监听事件.   
+
+#### 1.4.2 事件 enter
+
+若一个WebSocket客户端成功创建了一个jigsaw实例，那么会触发本事件，事件的第一个参数是jigsaw的名字。
+
+#### 1.4.3 事件 leave
+
+若一个WebSocket客户端销毁了一个jigsaw实例，那么会触发本事件，事件的第一个参数是jigsaw的名字。
+
+#### 1.4.4 事件 error
+
+若发生了错误，则该事件会被触发。
+
+#### 1.4.5 基于WebSocket的Endpoint通信协议
 
 ##### 1.4.2.1 创建WebSocket客户端与WSEndpoint的连接
 
