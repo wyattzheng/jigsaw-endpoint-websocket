@@ -168,3 +168,22 @@ port代表接口的名字
 msg是信息的具体内容。
 
 ```
+
+### 2 WSEndpoint-WebSDK
+    
+请查看本仓库的 ```websdk``` 目录，对于上述描述的WebSocket客户端接口，    
+在浏览器有sdk级别的封装。可以在浏览器环境下提供如下的方便的接口，   
+就像在Node.js环境使用jigsaw.js一样方便    
+
+```
+let jg = new Jigsaw("myjigsaw","ws://127.0.0.1:1001/")
+
+jg.send("test:get",{abc:123}).then((data)=>{
+	console.log(data);
+});
+
+jg.port("call",({data})=>{
+	console.log("your passed this:",data);
+});
+
+```
