@@ -148,6 +148,7 @@ jigsawname代表要创建的jigsaw实例名。
 请求封包: （WebSocket客户端向Endpoint通信）   
 ```
 setport(portname): 监听一个接口名为portname的数据，之后只要有jigsaw实例向该接口发送数据，都会被WebSocket客户端收到。
+unport(portname): 取消监听一个名为portname的接口，之后不会再收到该接口的数据。
 
 getallports() : 获取当前WebSocket客户端已经监听的所有jigsaw接口。
 

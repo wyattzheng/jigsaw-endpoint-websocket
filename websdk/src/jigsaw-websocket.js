@@ -77,6 +77,17 @@ window.Jigsaw=(()=>{
 
 			this.ports[portname]=handler;
 		}
+		async unport(portname){
+			if(this.state!="open")
+				throw new Error("in this state, can not unset port");
+
+			await this._wsSend({
+				type:"unport",
+				portname
+			});
+
+			delete this.ports[portname];
+		}
 		_doHeartbeat(){
 			this._wsSend({
 				type:"heartbeat"
