@@ -225,7 +225,7 @@ isstream@~0.1.2:
   resolved "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
-jigsaw.js@^5.0.7:
+jigsaw.js@^5.1.1:
   version "5.1.1"
   resolved "https://registry.npmjs.org/jigsaw.js/-/jigsaw.js-5.1.1.tgz#e1c544b55059b189743cd7c5aa36049b3c67458f"
   integrity sha512-3DldxjBCx9o+HlqabWr5gWIKlZZf5D8pOcAOELe4MEc18GckcnyFjMm9PZkop0GHzAnXP0pkV+/Ujh5hM3Pjbw==

@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "jigsaw.js": "^5.0.7",
+    "jigsaw.js": "^5.1.1",
     "ws": "^7.3.1"
   }
 }
