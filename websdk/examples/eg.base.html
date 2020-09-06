@@ -5,5 +5,13 @@
 
 </body>
 <script src="../src/jigsaw-websocket.js"></script>
+<script>
+	let jg=new Jigsaw("hw","ws://127.0.0.1:1001/");
+	jg.on("ready",()=>{
+		jg.port("get",(data)=>{
+			console.log(data);
+		})
+	})
 
+</script>
 </html>

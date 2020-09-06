@@ -12,24 +12,25 @@ window.Jigsaw=(()=>{
 		
 	class Jigsaw{
 		constructor(jgname,endpoint){
+			if(typeof(jgname)!="string","jgname must be specified");
+			if(typeof(endpoint)!="string","endpoint must be specified");
+
+			this.jgname=jgname;
+			this.endpoint=endpoint;
+
 			this.reqs={};
-
-			this.ws=new WebSocket(`${endpoint}${jgname}`);
-
-			this.state="close";
-
-			this.ws.onopen=this._onWSOpen.bind(this);
-			this.ws.onclose=this._onWSClose.bind(this);
-			this.ws.onmessage=this._handleMessage.bind(this);
-
-			this._heartbeater=setInterval(()=>{
-				this._doHeartbeat();
-			},10000);
-
+			
+			this.state="close";//connecting ready close
 
 			this.events={};
 			
 			this.ports={};
+
+			this._connect();
+		}
+		exit(){
+			this.state="dead";
+			this.close();
 		}
 		on(event,handler){
 			if(typeof(handler) != "function")
@@ -41,21 +42,61 @@ window.Jigsaw=(()=>{
 			if(this.events[event])
 				this.events[event](data);	
 		}
+		close(){
+			if(this.state=="close")
+				return;
+
+			this.ws.close();
+		}
+		_connect(){
+			if(this.state!="close")
+				return;
+
+			this.ws=new WebSocket(`${this.endpoint}${this.jgname}`);
+
+			this.ws.onopen=this._onWSOpen.bind(this);
+			this.ws.onclose=this._onWSClose.bind(this);
+			this.ws.onmessage=this._handleMessage.bind(this);
+
+			this._heartbeater=setInterval(()=>{
+				this._doHeartbeat();
+			},10000);
+
+			this.state="connecting";
+			
+		}
 		_onWSOpen(){
-			this.state="open";
+			if(this.state=="ready")
+				return;
+
+			console.log('[Jigsaw]',`${this.jgname} 模块已启动`)
+			this.state="ready";
 			this.emit("ready");
 		}
 		_onWSClose(){
+			if(this.state=="close")
+				return;
+
 			for(let r of Object.values(this.reqs))
 				r.reject("websocket connection closed");
 			
 			clearInterval(this._heartbeater);
 
-			this.state="close";
-			this.emit("close");
+
+
+			if(this.state!="dead"){
+				this.state="close";
+				this.emit("close");
+
+				console.log('[Jigsaw]',`${this.jgname} 被断开,开始重连`);
+				setTimeout(()=>this._connect(),1000);
+			}
+
+
+		
 		}
 		async send(path,data){
-			if(this.state!="open")
+			if(this.state!="ready")
 				throw new Error("in this state, can not do send");
 
 			return await this._wsSend({
@@ -65,28 +106,41 @@ window.Jigsaw=(()=>{
 			})
 		}
 		async port(portname,handler){
-			if(this.state!="open")
-				throw new Error("in this state, can not set port");
-			if(typeof(handler)!="function")
-				throw new Error("handler must be a function");
+			try{
+				if(this.state!="ready")
+					throw new Error("in this state, can not set port");
+				if(typeof(handler)!="function")
+					throw new Error("handler must be a function");
 
-			await this._wsSend({
-				type:"setport",
-				portname
-			});
+			
+				await this._wsSend({
+					type:"setport",
+					portname
+				})
+				this.ports[portname]=handler;
+			}catch(err){
+				this.close();
+				throw err;
+			}
+			
 
-			this.ports[portname]=handler;
 		}
 		async unport(portname){
-			if(this.state!="open")
-				throw new Error("in this state, can not unset port");
-
-			await this._wsSend({
-				type:"unport",
-				portname
-			});
-
-			delete this.ports[portname];
+			try{
+				if(this.state!="ready")
+					throw new Error("in this state, can not unset port");
+					
+			
+				await this._wsSend({
+					type:"unport",
+					portname
+				})
+				delete this.ports[portname];
+			}catch(err){
+				this.close();
+				throw err;
+			}
+			
 		}
 		_doHeartbeat(){
 			this._wsSend({
@@ -94,7 +148,7 @@ window.Jigsaw=(()=>{
 			});
 		}
 		async _wsSend(req){
-			if(this.state!="open")
+			if(this.state!="ready")
 				throw new Error("in this state, can not do _wsSend");
 
 			let reqid=Math.random()+"";
@@ -112,16 +166,12 @@ window.Jigsaw=(()=>{
 
 			try{
 				let res = await defer.promise;
-
-				clearTimeout(timeout);
-				delete this.reqs[reqid];
-
 				return res;			
 			}catch(e){
+				throw e;
+			}finally{
 				clearTimeout(timeout);
 				delete this.reqs[reqid];
-
-				throw e;
 			}
 
 

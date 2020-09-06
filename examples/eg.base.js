@@ -18,17 +18,18 @@ endpoint.on("error",console.error);
 
 async function startSending(){
 	let jg=new jigsaw();
-	
+	let count=0;
 	while(true){
 		try{
 			await jg.send("hw:get",{
-				hello:"Hello World!"
+				hello:"Hello World!",
+				count:count++
 			});
-
+			console.log("sended");
 		}catch(err){
-
+			console.log(err);
 		}
-		await sleep(2000);
+		await sleep(1000);
 	}
 }
 
