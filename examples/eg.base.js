@@ -16,21 +16,25 @@ endpoint.on("leave",(jgname)=>{
 })
 endpoint.on("error",console.error);
 
-async function startSending(){
+function startSending(){
 	let jg=new jigsaw();
 	let count=0;
-	while(true){
-		try{
-			await jg.send("hw:get",{
-				hello:"Hello World!",
-				count:count++
-			});
-			console.log("sended");
-		}catch(err){
-			console.log(err);
+
+	jg.on("ready",async ()=>{
+		while(true){
+			try{
+				await jg.send("hw:get",{
+					hello:"Hello World!",
+					count:count++
+				});
+				console.log("sended");
+			}catch(err){
+				console.log(err);
+			}
+			await sleep(100);
 		}
-		await sleep(1000);
-	}
+	})
+	
 }
 
 domainserver();
